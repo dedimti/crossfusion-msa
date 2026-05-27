@@ -1,0 +1,18 @@
+{
+  "_description": "MER 2024 high-agreement subset split. Utterances with per-utterance Fleiss kappa >= 0.70 are classified as high-agreement. Used in Table 8 of the paper.",
+  "threshold": 0.70,
+  "n_total": 9241,
+  "n_high": 5637,
+  "n_low": 3604,
+  "pct_high": 61.0,
+  "high_agreement": [
+    "PLACEHOLDER_utt_id_001",
+    "PLACEHOLDER_utt_id_002",
+    "... (released upon paper acceptance)"
+  ],
+  "low_agreement": [
+    "PLACEHOLDER_utt_id_003",
+    "... (released upon paper acceptance)"
+  ],
+  "_note": "Full split IDs will be released at https://github.com/crossfusion-msa/crossfusion-msa upon paper acceptance. The kappa values are sourced from the MER 2024 dataset annotations (doi:10.1145/3689092.3689959)."
+}

@@ -1,0 +1,90 @@
+# CrossFusion Configuration
+# Reproduces Table 3 results from the paper
+
+data_root: "/path/to/datasets"   # Update this to your dataset root
+
+model:
+  hidden_dim: 768
+  num_heads: 12
+  num_classes: 3                  # Negative / Neutral / Positive
+  dropout: 0.1
+
+training:
+  # Loss
+  alpha: 0.7                      # Classification weight (tuned via grid search)
+  kappa_max: 1.0                  # Normalization for confidence weighting
+
+  # Optimizer (AdamW with differential LRs)
+  lr_text: 2.0e-5                 # Text encoder (BERT-base)
+  lr_av: 1.0e-5                   # Audio + Video encoders
+  weight_decay: 0.01
+
+  # Schedule
+  scheduler: cosine
+  warmup_ratio: 0.1               # 10% of total steps for warmup
+
+  # Batching
+  batch_size: 32
+  num_workers: 4
+
+  # Early stopping
+  max_epochs: 30
+  patience: 5
+
+  # Missing-modality augmentation (training only)
+  p_miss_audio: 0.0               # Audio is never dropped during training
+  p_miss_video: 0.20              # Frame dropout: simulates naturalistic missingness
+
+  # Reproducibility
+  seeds: [42, 43, 44, 45, 46]     # One per fold
+
+datasets:
+  mer2024:
+    test_manifest: "data/splits/mer2024_test.json"
+    fold_manifests:
+      - train: "data/splits/mer2024_fold0_train.json"
+        val:   "data/splits/mer2024_fold0_val.json"
+      - train: "data/splits/mer2024_fold1_train.json"
+        val:   "data/splits/mer2024_fold1_val.json"
+      - train: "data/splits/mer2024_fold2_train.json"
+        val:   "data/splits/mer2024_fold2_val.json"
+      - train: "data/splits/mer2024_fold3_train.json"
+        val:   "data/splits/mer2024_fold3_val.json"
+      - train: "data/splits/mer2024_fold4_train.json"
+        val:   "data/splits/mer2024_fold4_val.json"
+
+  mer2023:
+    test_manifest: "data/splits/mer2023_test.json"
+    fold_manifests:
+      - train: "data/splits/mer2023_fold0_train.json"
+        val:   "data/splits/mer2023_fold0_val.json"
+      - train: "data/splits/mer2023_fold1_train.json"
+        val:   "data/splits/mer2023_fold1_val.json"
+      - train: "data/splits/mer2023_fold2_train.json"
+        val:   "data/splits/mer2023_fold2_val.json"
+      - train: "data/splits/mer2023_fold3_train.json"
+        val:   "data/splits/mer2023_fold3_val.json"
+      - train: "data/splits/mer2023_fold4_train.json"
+        val:   "data/splits/mer2023_fold4_val.json"
+
+  cmu_mosei:
+    test_manifest: "data/splits/cmu_mosei_test.json"
+    fold_manifests:
+      - train: "data/splits/cmu_mosei_fold0_train.json"
+        val:   "data/splits/cmu_mosei_fold0_val.json"
+      - train: "data/splits/cmu_mosei_fold1_train.json"
+        val:   "data/splits/cmu_mosei_fold1_val.json"
+      - train: "data/splits/cmu_mosei_fold2_train.json"
+        val:   "data/splits/cmu_mosei_fold2_val.json"
+      - train: "data/splits/cmu_mosei_fold3_train.json"
+        val:   "data/splits/cmu_mosei_fold3_val.json"
+      - train: "data/splits/cmu_mosei_fold4_train.json"
+        val:   "data/splits/cmu_mosei_fold4_val.json"
+
+# Hardware used in paper
+hardware:
+  gpu: "NVIDIA A100 80GB SXM4"
+  cuda: "11.8"
+  framework: "PyTorch 2.1.0"
+  transformers: "4.36.2"
+  training_time_per_fold: "~14 hours"
